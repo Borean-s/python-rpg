@@ -51,7 +51,11 @@ def get_encounter():
     return "chest"
   else:
     return "docile" 
+
+def encounter_hostile():
+  dice = random.randint(1, 100)
   
+
 def proceed():
 
   while not game_over:
@@ -70,4 +74,5 @@ def main():
   print(player.get_name())
   
 if __name__ == "__main__":
+  game_over = False
   main()
