@@ -6,8 +6,9 @@ class Juggernaut(Hero):
     super().__init__(
       name = name,
       max_hp = 150,
-      damage_multiplier = 1.3,
-      movement_speed = 40
+      damage_multiplier = 1.5,
+      movement_speed = 40,
+      
       )
 
     

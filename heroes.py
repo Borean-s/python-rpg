@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 
+from weapons import Wep, WoodenSword
+
 class Hero(ABC):
   def __init__(
       self, 
@@ -7,6 +9,7 @@ class Hero(ABC):
       max_hp: int, 
       damage_multiplier: float, 
       movement_speed: int, 
+
       
       ):
 
@@ -15,6 +18,7 @@ class Hero(ABC):
     self.current_hp = self.max_hp
     self.damage_multiplier = damage_multiplier
     self.movement_speed = movement_speed
+    self.weapon = WoodenSword()
     
   def get_Name(self):
     return self.name
@@ -37,8 +41,10 @@ class Hero(ABC):
   def get_currentHP(self):
     return self.current_hp
 
-  def take_damage(self, damage: int):
-    self.current_hp -= damage
-    if self.current_hp < 0:
-      self.current_hp = 0
-      game_over = True
+  def get_class(self):
+    return self.__class__.__name__
+
+  def calculate_damage(self, weapon):
+    return self.damage_multiplier * weapon.get_wep_damage()
+
+ # def take_damage(self, damage: int):

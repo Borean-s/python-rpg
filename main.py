@@ -27,7 +27,7 @@ def choose_hero(name):
     print("***********\n")
 
     try:
-      choice = int(input(f"Choose your character, {name}!\n"))
+      choice = int(input(f"Choose your character!\n"))
 
       if choice in (1, 2, 3):
         break
@@ -38,6 +38,7 @@ def choose_hero(name):
       print("Please enter a valid number.\n")
   chosen_hero = hero_classes[choice](name)
   return chosen_hero
+
 
 
 def get_encounter():
@@ -68,10 +69,9 @@ def main():
 
   user_name = get_name()
 
-
   player = choose_hero(user_name)
 
-  print(player.get_name())
+  print(f"\nWelcome, {player.get_Name()}! You are a {player.get_class()}.\nHP: {player.get_maxHP()}\nWeapon: {player.get_weapon().get_name()} ({player.calculate_damage(player.get_weapon())} AD)\nMovement Speed: {player.get_movementSpeed()}\n")
   
 if __name__ == "__main__":
   game_over = False

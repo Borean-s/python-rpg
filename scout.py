@@ -6,8 +6,9 @@ class Scout(Hero):
     super().__init__(
       name = name,
       max_hp = 70,
-      damage_multiplier = 0.7,
-      movement_speed = 120
+      damage_multiplier = 0.8,
+      movement_speed = 120,
+
       )
 
   def get_damageMultiplier(self):
