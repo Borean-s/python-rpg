@@ -3,6 +3,7 @@ from knight import Knight
 from juggernaut import Juggernaut
 from mobs import Goblin, Gorilla, Grizzly, Rabbit, Sheep, Trader, Wolf
 from scout import Scout
+from chests import wooden_chest, hidden_chest, royal_chest
 import random
 
 def get_name():
@@ -86,12 +87,12 @@ def encounter_docile():
 def encounter_chest():
   dice = random.randint(1, 100)
 
-  if dice <= 30:
-    print("You found a chest!")
-  if dice <= 60:
-    print("You found a locked chest!")
+  if dice <= 50:
+    return wooden_chest
+  elif dice <= 80:
+    return hidden_chest
   else:
-    print("You found a diamond chest!")
+    return royal_chest
 
 def proceed(player):
 
@@ -122,7 +123,8 @@ def proceed(player):
       print(f"\nYou have encountered a {docile_mob.get_name()}!\nHP: {docile_mob.get_maxHP()}\n")
       mob_Panel(docile_mob, player)
     elif encounter == "chest":
-      encounter_chest()
+      chest = encounter_chest()
+      chest_Panel(chest, player)
 
 
 def mob_Panel(mob, player):
@@ -161,11 +163,54 @@ def attack_mob(mob, player):
   print(f"You deal {player.calculate_damage(player.get_weapon())} damage to the {mob.get_name()}!\n")
   mob.current_hp -= player.calculate_damage(player.get_weapon())
   if mob.get_currentHP() <= 0:
-    print(f"You have defeated the {mob.get_name()}!")
+    player.xp += mob.get_xp()
+    print(f"You killed {mob.get_name()}!\nYou gained {mob.get_xp()} XP!\n{player.get_xp()}/100XP\n")
     return 
   else:
-   print(f"The {mob.get_name()} has {mob.get_currentHP()} HP left!")
+   print(f"The {mob.get_name()}:{mob.get_currentHP()}/{mob.get_maxHP()}\n")
+   print(f"The {mob.get_name()} attacked you!\n")
+   player.current_hp -= mob.get_damage()
+   if player.get_currentHP() <= 0:
+    print(f"You have been killed by the {mob.get_name()}!\n")
+    global game_over
+    game_over = True
+    return
+   elif player.get_currentHP() > 0 and player.get_xp() >= 100:
+    print(f"\nCongratulations, {player.get_name()}! You have reached 100XP and won the game!\n")
+    global win
+    win = True
+    return
+   else:
+      print(f"{player.get_name()} : {player.get_currentHP()}/{player.get_maxHP()}\n{player.get_xp()}/100XP")
+
   mob_Panel(mob, player)
+
+def chest_Panel(chest, player):
+
+  print(f"\nYou have found a {chest.get_name()}!\n")
+
+  while True:
+
+    print(f"\n1- Open Chest\n2- Walk Away\n")
+    
+    try:
+      choice = int(input())
+
+      if choice in (1, 2):
+        if choice == 1:
+          weapon = chest.open()
+          if weapon != "None":
+            print(f"You have found a {weapon.get_name()}!\n")
+            player.equip_weapon(weapon)
+            print(f"You have equipped the {weapon.get_name()}!\n")
+          else:
+            print("The chest was empty!\n")
+        break
+      else:
+        print("Please enter a valid number.\n")
+
+    except ValueError:
+      print("Please enter a valid number.\n")
 
 def main():
 
@@ -173,14 +218,30 @@ def main():
 
   player = choose_hero(user_name)
 
-  print(f"\nWelcome, {player.get_Name()}! You are a {player.get_class()}.\nHP: {player.get_maxHP()}\nWeapon: {player.get_weapon().get_name()} ({player.calculate_damage(player.get_weapon())} AD)\nMovement Speed: {player.get_movementSpeed()}\n")
-  print(f"\nGet ready to embark on your journey, {player.get_Name()}! in Gründelsraum all sorts of unholy creatures await you!\n\nType 'ready' to  proceed.\n")
+  print(f"\nWelcome, {player.get_name()}! You are a {player.get_class()}.\nHP: {player.get_maxHP()}\nWeapon: {player.get_weapon().get_name()} ({player.calculate_damage(player.get_weapon())} AD)\nMovement Speed: {player.get_movementSpeed()}\n")
+  print(f"\nGet ready to embark on your journey, {player.get_name()}! in Gründelsraum all sorts of unholy creatures await you!\nTry not to die and reach 100XP!\n\nType 'ready' to  proceed.\n")
 
   while not input().strip().lower() == "ready":
     print("Type 'ready' to continue.\n") 
 
   while not game_over and not win:
+
+    if player.get_xp() >= 100:
+      print("****************")
+      print(f"\nCongratulations, {player.get_name()}! You have reached 100XP and won the game!\n")
+      print("****************")
+      break
+    elif player.get_currentHP() <= 0:
+      print("****************")
+      print(f"\nYou had a good run, {player.get_name()}!\nXP: {player.get_xp()}/100\n")
+      print("****************")
+      break
+
     proceed(player)
+
+
+  
+
 
   
 if __name__ == "__main__":

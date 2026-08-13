@@ -9,18 +9,19 @@ class Hero(ABC):
       max_hp: int, 
       damage_multiplier: float, 
       movement_speed: int, 
-
+      xp: int = 0
       
       ):
 
     self.name = name
     self.max_hp = max_hp
     self.current_hp = self.max_hp
+    self.xp = xp
     self.damage_multiplier = damage_multiplier
     self.movement_speed = movement_speed
     self.weapon = WoodenSword()
     
-  def get_Name(self):
+  def get_name(self):
     return self.name
 
   def get_damage(self):
@@ -46,5 +47,11 @@ class Hero(ABC):
 
   def calculate_damage(self, weapon):
     return self.damage_multiplier * weapon.get_wep_damage()
+
+  def equip_weapon(self, weapon):
+    self.weapon = weapon
+
+  def get_xp(self):
+    return self.xp
 
  # def take_damage(self, damage: int):

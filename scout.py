@@ -11,9 +11,6 @@ class Scout(Hero):
 
       )
 
-  def get_damageMultiplier(self):
-    return self.damage_multiplier
+  
 
-  def get_name(self):
-    return self.name
-
+ 
