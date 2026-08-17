@@ -1,0 +1,42 @@
+
+========== GAME LOG ==========
+
+Name: Boran
+Moves: 1
+Mobs killed: 0
+XP: 0
+
+Weapons used:
+
+==============================
+
+========== GAME LOG ==========
+
+Name: Goran
+Moves: 51
+Mobs killed: 7
+XP: 140
+
+Weapons used:
+- Twig
+- Wooden Sword
+- Lumberjack Axe
+- Wooden Sword
+- Royal Sword
+
+==============================
+
+========== GAME LOG ==========
+
+Name: Sala
+Class: Juggernaut
+Moves: 50
+Mobs killed: 9
+XP: 105
+
+Weapons used:
+- Wooden Sword
+- Rusty Dagger
+- Royal Sword
+
+==============================

@@ -1,4 +1,5 @@
 
+import game_log
 from knight import Knight
 from juggernaut import Juggernaut
 from mobs import Goblin, Gorilla, Grizzly, Rabbit, Sheep, Trader, Wolf
@@ -94,9 +95,9 @@ def encounter_chest():
   else:
     return royal_chest
 
-def proceed(player):
+def proceed(player, game_log):
 
-  
+  game_log.record_move()
 
   print("\n")
 
@@ -117,17 +118,17 @@ def proceed(player):
     elif encounter == "hostile":
       hostile_mob = encounter_hostile()
       print(f"\nYou have encountered a {hostile_mob.get_name()}!\nHP: {hostile_mob.get_maxHP()}\n")
-      mob_Panel(hostile_mob, player)
+      mob_Panel(hostile_mob, player, game_log)
     elif encounter == "docile":
       docile_mob = encounter_docile()
       print(f"\nYou have encountered a {docile_mob.get_name()}!\nHP: {docile_mob.get_maxHP()}\n")
-      mob_Panel(docile_mob, player)
+      mob_Panel(docile_mob, player, game_log)
     elif encounter == "chest":
       chest = encounter_chest()
-      chest_Panel(chest, player)
+      chest_Panel(chest, player, game_log)
 
 
-def mob_Panel(mob, player):
+def mob_Panel(mob, player, game_log):
 
   
 
@@ -149,7 +150,7 @@ def mob_Panel(mob, player):
   
   match choice:
     case 1:
-      attack_mob(mob, player)
+      attack_mob(mob, player, game_log)
     case 2:
       print("You run away from the mob!")
     case 3:
@@ -157,7 +158,7 @@ def mob_Panel(mob, player):
     case 4:
       print("You check your inventory!")  
 
-def attack_mob(mob, player):
+def attack_mob(mob, player, game_log):
 
   print(f"You attacked the {mob.get_name()}!\n")
   print(f"You deal {player.calculate_damage(player.get_weapon())} damage to the {mob.get_name()}!\n")
@@ -165,6 +166,7 @@ def attack_mob(mob, player):
   if mob.get_currentHP() <= 0:
     player.xp += mob.get_xp()
     print(f"You killed {mob.get_name()}!\nYou gained {mob.get_xp()} XP!\n{player.get_xp()}/100XP\n")
+    game_log.record_kill(mob)
     return 
   else:
    print(f"The {mob.get_name()}:{mob.get_currentHP()}/{mob.get_maxHP()}\n")
@@ -183,9 +185,9 @@ def attack_mob(mob, player):
    else:
       print(f"{player.get_name()} : {player.get_currentHP()}/{player.get_maxHP()}\n{player.get_xp()}/100XP")
 
-  mob_Panel(mob, player)
+  mob_Panel(mob, player, game_log)
 
-def chest_Panel(chest, player):
+def chest_Panel(chest, player, game_log):
 
   print(f"\nYou have found a {chest.get_name()}!\n")
 
@@ -203,6 +205,7 @@ def chest_Panel(chest, player):
             print(f"You have found a {weapon.get_name()}!\n")
             player.equip_weapon(weapon)
             print(f"You have equipped the {weapon.get_name()}!\n")
+            game_log.record_weapon(weapon)
           else:
             print("The chest was empty!\n")
         break
@@ -217,6 +220,11 @@ def main():
   user_name = get_name()
 
   player = choose_hero(user_name)
+
+  log = game_log.GameLog(
+    player.get_name(),
+    player.get_class()
+)
 
   print(f"\nWelcome, {player.get_name()}! You are a {player.get_class()}.\nHP: {player.get_maxHP()}\nWeapon: {player.get_weapon().get_name()} ({player.calculate_damage(player.get_weapon())} AD)\nMovement Speed: {player.get_movementSpeed()}\n")
   print(f"\nGet ready to embark on your journey, {player.get_name()}! in Gründelsraum all sorts of unholy creatures await you!\nTry not to die and reach 100XP!\n\nType 'ready' to  proceed.\n")
@@ -237,8 +245,10 @@ def main():
       print("****************")
       break
 
-    proceed(player)
-
+    proceed(player, log)
+  log.save(player.get_xp())
+   
+    
 
   
 
